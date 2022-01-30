@@ -73,7 +73,15 @@ const Card = ({movie}) => {
             }
         }
         return genreArray.map((genre) => <li key={genre}>{genre}</li> )
-    }
+    };
+
+    const addStorage = () => {
+        let storedData = window.localStorage.movies ? window.localStorage.movies.split(",") : [];
+        if (!storedData.includes(movie.id.toString())){
+            storedData.push(movie.id);
+            window.localStorage.movies = storedData;
+        }
+    };
 
     return (
         <div className="card">
@@ -84,10 +92,11 @@ const Card = ({movie}) => {
                 <h5>Sorti le : {dateFormater(movie.release_date)}</h5>
             ) : ("")}
             <h4>{movie.vote_average}/10 <span>⭐</span></h4>
-            <ul>{genreFinder()}</ul>
+            <ul>{movie.genre_ids ? genreFinder()
+                : movie.genres.map((genre, index) => (<li key={index}>{genre.name}</li>))}</ul>
             {movie.overview ? <h3>Synopsis</h3> : ""}
             <p>{movie.overview}</p>
-            <div className="btn">Ajouter aux coups de coeur</div>
+            <div className="btn" onClick={() => addStorage()}>Ajouter aux coups de coeur</div>
 
         </div>
     );
